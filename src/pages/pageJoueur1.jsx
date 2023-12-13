@@ -10,7 +10,7 @@ function PageJoueur1() {
 
 
 
-
+    
   const [move, setMove] = useState(0);
   const [address, setAddress] = useState('0x');
   const [hashResult, setHashResult] = useState('');
@@ -223,16 +223,16 @@ function PageJoueur1() {
             <button onClick={display}>Display</button>
           </div>
           <div>
-            <button onClick={displayGameId}>Display Game Id</button>
+            {/* <button onClick={displayGameId}>Display Game Id</button> */}
+            <p>Game Id: {gameId}</p>
           </div>
+
           <div>
             <button onClick={getEthJ1}>Get my eth back</button>
           </div>
         </div>
         <div className='rigth'>
           <h1>Result</h1>
-          <h5>Solve</h5>
-          <input type="text" value={move} onChange={handleMoveChange} placeholder="Enter move" />
           <button onClick={solve}>Solve</button>
         </div>
       </div>
