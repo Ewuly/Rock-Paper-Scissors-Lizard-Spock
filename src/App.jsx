@@ -5,8 +5,13 @@ import { RPSAbi, RPSAddress } from "./RPSContract.js";
 import { ethers } from 'ethers';
 import './App.css';
 function App() {
-  const [move, setMove] = useState(0);
+  // Initialiser le salt avec une valeur aléatoire
   const [salt, setSalt] = useState(0);
+
+
+
+
+  const [move, setMove] = useState(0);
   const [address, setAddress] = useState('0x');
   const [hashResult, setHashResult] = useState('');
   const [connectionStatus, setConnectionStatus] = useState('Disconnected');
@@ -24,6 +29,12 @@ function App() {
   const handleSaltChange = (event) => {
     setSalt(event.target.value);
   };
+
+
+  async function generateRandomUint256() {
+    setSalt(Math.floor(Math.random() * Math.pow(2, 16)));
+  };
+
   async function getHash() {
     try {
       const networkData = await provider.getNetwork();
@@ -50,9 +61,11 @@ function App() {
                 }
               }
             }
+
             const contract = new ethers.Contract(HasherAddress, HasherAbi, provider);
             const hash = await contract.hash(move, salt);
             setHashResult(hash);
+
           } else {
             setConnectionStatus('Please connect MetaMask');
             await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -92,8 +105,10 @@ function App() {
         const contractRPS = new ethers.Contract(RPSAddress, RPSAbi, signer);
         const amountInWei = ethers.utils.parseEther('0.01');
         const init = await contractRPS.createGame(hashResult, address, { value: amountInWei });
+
         const id = await contractRPS.gameId();
         setGameId(id.toString());
+
       } else {
         setConnectionStatus('Please install MetaMask');
       }
@@ -162,6 +177,7 @@ function App() {
         const signer = provider.getSigner(); // Get the signer from the provider
         const contractRPS = new ethers.Contract(RPSAddress, RPSAbi, signer);
 
+
         const solve = await contractRPS.solve(gameId, move, salt, { gasLimit: 1000000 });
 
 
@@ -173,7 +189,48 @@ function App() {
       console.log(error);
     }
   }
+  async function getEthJ1() {
+    try {
+      if (typeof window.ethereum !== "undefined") {
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+        setConnectionStatus('Connected');
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner(); // Get the signer from the provider
+        const contractRPS = new ethers.Contract(RPSAddress, RPSAbi, signer);
 
+
+        const solve = await contractRPS.j2Timeout(gameId, { gasLimit: 1000000 });
+
+
+      } else {
+        setConnectionStatus('Please install MetaMask');
+      }
+    } catch (error) {
+      console.log("error1");
+      console.log(error);
+    }
+  }
+  async function getEthJ2() {
+    try {
+      if (typeof window.ethereum !== "undefined") {
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+        setConnectionStatus('Connected');
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner(); // Get the signer from the provider
+        const contractRPS = new ethers.Contract(RPSAddress, RPSAbi, signer);
+
+
+        const solve = await contractRPS.j1Timeout(gameId, { gasLimit: 1000000 });
+
+
+      } else {
+        setConnectionStatus('Please install MetaMask');
+      }
+    } catch (error) {
+      console.log("error1");
+      console.log(error);
+    }
+  }
 
   return (
     <>
@@ -182,6 +239,9 @@ function App() {
           <div>
             {/* <button onClick={connect}>Connect</button> */}
             <h1>Player 1</h1>
+          </div>
+          <div>
+            <button onClick={generateRandomUint256}>New Salt</button>
           </div>
           <div>
             <p>1 : Rock</p>
@@ -206,6 +266,9 @@ function App() {
           <div>
             <button onClick={displayGameId}>Display Game Id</button>
           </div>
+          <div>
+            <button onClick={getEthJ1}>Get my eth back</button>
+          </div>
         </div>
         <div className='middle'>
           <div>
@@ -214,6 +277,9 @@ function App() {
             <input type="text" value={move} onChange={handleMoveChange} placeholder="Enter move" />
             <input type="text" value={gameId} onChange={handleGameIdChange} placeholder="Enter Id" />
             <button onClick={play}>Play</button>
+          </div>
+          <div>
+            <button onClick={getEthJ2}>Get my eth back</button>
           </div>
         </div>
         <div className='rigth'>
