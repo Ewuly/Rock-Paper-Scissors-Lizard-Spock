@@ -1,4 +1,4 @@
-export const RPSAddress = "0xCCd24c9343DFfB12b3e17B28bCdD1fBebDf4d099";
+export const RPSAddress = "0xB02F0855E123647294b7511cCcD25Bd8a0E4F773";
 export const RPSAbi = [
   {
     "inputs": [
