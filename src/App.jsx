@@ -148,7 +148,7 @@ function App() {
         const contractRPS = new ethers.Contract(RPSAddress, RPSAbi, signer);
 
         const amountInWei = ethers.utils.parseEther('0.01');
-        const play = await contractRPS.play(move, { value: amountInWei });
+        const play = await contractRPS.play(move, { value: amountInWei, gasLimit: 1000000  });
 
 
 
@@ -210,7 +210,7 @@ function App() {
             <strong>Hash Result:</strong> {hashResult}
           </div>
           <div>
-            <button onClick={initGame}>Get Address</button>
+            <button onClick={initGame}>Init Game : 1st Move</button>
           </div>
           <div>
             <button onClick={display}>Display</button>
