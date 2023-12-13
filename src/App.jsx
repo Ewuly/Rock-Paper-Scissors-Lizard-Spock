@@ -3,10 +3,39 @@ import React, { useState } from 'react';
 import { HasherAbi, HasherAddress } from "./HasherContract.js";
 import { RPSAbi, RPSAddress } from "./RPSContract.js";
 import { ethers } from 'ethers';
+import crypto from 'crypto';
 import './App.css';
 function App() {
+  /// Function to generate a random uint256 using the Web Crypto API
+  const generateRandomUint256 = async () => {
+    const randomBuffer = new Uint8Array(32); // 32 bytes for a uint256
+
+    if (window.crypto && window.crypto.getRandomValues) {
+      window.crypto.getRandomValues(randomBuffer);
+    } else {
+      // Fallback to Math.random() if crypto.getRandomValues is not available
+      for (let i = 0; i < randomBuffer.length; i++) {
+        randomBuffer[i] = Math.floor(Math.random() * 256);
+      }
+    }
+
+    const randomUint256 = '0x' + Array.from(randomBuffer)
+      .map((byte) => byte.toString(16).padStart(2, '0'))
+      .join('');
+
+    return randomUint256;
+  };
+
+  // State for the salt
+  const [salt, setSalt] = useState('');
+
+  // Function to update the salt with a new random uint256
+  const updateSalt = async () => {
+    const newSalt = await generateRandomUint256();
+    setSalt(newSalt);
+  };
+
   const [move, setMove] = useState(0);
-  const [salt, setSalt] = useState(0);
   const [address, setAddress] = useState('0x');
   const [hashResult, setHashResult] = useState('');
   const [connectionStatus, setConnectionStatus] = useState('Disconnected');
@@ -50,6 +79,7 @@ function App() {
                 }
               }
             }
+            updateSalt();
             const contract = new ethers.Contract(HasherAddress, HasherAbi, provider);
             const hash = await contract.hash(move, salt);
             setHashResult(hash);
