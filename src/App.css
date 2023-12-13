@@ -40,3 +40,18 @@
 .read-the-docs {
   color: #888;
 }
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* Adjust the column sizes as needed */
+}
+
+.left {
+  grid-column: 1;
+}
+.middle {
+  grid-column: 2;
+}
+.right {
+  grid-column: 3;
+}
