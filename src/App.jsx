@@ -11,6 +11,7 @@ function App() {
   const [hashResult, setHashResult] = useState('');
   const [connectionStatus, setConnectionStatus] = useState('Disconnected');
   const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const [gameId, setGameId] = useState(0);
 
   const handleAddressChange = (event) => {
     setAddress(event.target.value);
@@ -19,6 +20,10 @@ function App() {
   const handleMoveChange = (event) => {
     setMove(event.target.value);
   };
+
+  const handleGameIdChange = (event) => {
+    setGameId(event.target.value);
+  }
 
   const handleSaltChange = (event) => {
     setSalt(event.target.value);
@@ -97,8 +102,9 @@ function App() {
         const contractRPS = new ethers.Contract(RPSAddress, RPSAbi, signer);
 
         const amountInWei = ethers.utils.parseEther('0.01');
-        const init = await contractRPS.RPSinit(hashResult, address, { value: amountInWei });
-
+        const init = await contractRPS.createGame(hashResult, address, { value: amountInWei });
+        const id = await contractRPS.gameId();
+        setGameId(id.toString());
 
       } else {
         setConnectionStatus('Please install MetaMask');
@@ -118,23 +124,13 @@ function App() {
     const signer = provider.getSigner(); // Get the signer from the provider
     const contractRPS = new ethers.Contract(RPSAddress, RPSAbi, signer);
 
-    // Calling the values from the contract
-    const j1 = await contractRPS.j1();
-    const j2 = await contractRPS.j2();
-    const c1Hash = await contractRPS.c1Hash();
-    const c2 = await contractRPS.c2();
-    const stake = await contractRPS.stake();
-    const TIMEOUT = await contractRPS.TIMEOUT();
-    const lastAction = await contractRPS.lastAction();
+    console.log("gameId:", gameId.toString());
+    const game = await contractRPS.games(gameId.toString());
+    console.log(game);
+    console.log(game.j1);
 
-    // Displaying the values
-    console.log("j1:", j1);
-    console.log("j2:", j2);
-    console.log("c1Hash:", c1Hash);
-    console.log("c2:", c2);
-    console.log("stake:", stake.toString());
-    console.log("TIMEOUT:", TIMEOUT.toString());
-    console.log("lastAction:", lastAction.toString());
+
+    
   }
 
   async function play() {
@@ -148,7 +144,7 @@ function App() {
         const contractRPS = new ethers.Contract(RPSAddress, RPSAbi, signer);
 
         const amountInWei = ethers.utils.parseEther('0.01');
-        const play = await contractRPS.play(move, { value: amountInWei, gasLimit: 1000000  });
+        const play = await contractRPS.play(gameId, move, { value: amountInWei, gasLimit: 1000000  });
 
 
 
@@ -172,7 +168,7 @@ function App() {
         const contractRPS = new ethers.Contract(RPSAddress, RPSAbi, signer);
 
 
-        const solve = await contractRPS.solve(move, salt , { gasLimit: 1000000 });
+        const solve = await contractRPS.solve(gameId, move, salt , { gasLimit: 1000000 });
 
 
 
@@ -219,8 +215,9 @@ function App() {
         <div className='middle'>
           <div>
             <h1>Player 2</h1>
-            <h5>Move </h5>
+            <h5>Move -------------------------------- Game Id</h5>
             <input type="text" value={move} onChange={handleMoveChange} placeholder="Enter move" />
+            <input type="text" value={gameId} onChange={handleGameIdChange} placeholder="Enter Id" />
             <button onClick={play}>Play</button>
 
           </div>
