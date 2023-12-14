@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HasherAbi, HasherAddress } from "./HasherContract.js";
 import { RPSAbi, RPSAddress } from "./RPSContract.js";
 import { ethers } from 'ethers';
@@ -7,16 +7,14 @@ import '../App.css';
 function PageJoueur2() {
   // Initialiser le salt avec une valeur aléatoire
   const [salt, setSalt] = useState(0);
-
-
-
-
   const [move, setMove] = useState(0);
   const [address, setAddress] = useState('0x');
   const [hashResult, setHashResult] = useState('');
   const [connectionStatus, setConnectionStatus] = useState('Disconnected');
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const [gameId, setGameId] = useState(0);
+
+
   const handleAddressChange = (event) => {
     setAddress(event.target.value);
   };
@@ -29,8 +27,6 @@ function PageJoueur2() {
   const handleSaltChange = (event) => {
     setSalt(event.target.value);
   };
-
-
 
   async function connect() {
     try {
@@ -56,7 +52,12 @@ function PageJoueur2() {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner(); // Get the signer from the provider
         const contractRPS = new ethers.Contract(RPSAddress, RPSAbi, signer);
-        const amountInWei = ethers.utils.parseEther('0.01');
+        const game = await contractRPS.games(gameId);
+        console.log(game);
+        const amount = game.stake / 10**18;
+        console.log(amount.toString());
+
+        const amountInWei = ethers.utils.parseEther(amount.toString());
         const play = await contractRPS.play(gameId, move, { value: amountInWei, gasLimit: 1000000 });
 
 
