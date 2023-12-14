@@ -33,7 +33,7 @@ function PageJoueur1() {
 
 
   async function generateRandomUint256() {
-    setSalt(Math.floor(Math.random() * Math.pow(2, 16)));
+    setSalt(Math.floor(Math.random() * Math.pow(2, 32)));
   };
 
   async function getHash() {
@@ -62,7 +62,7 @@ function PageJoueur1() {
                 }
               }
             }
-
+            console.log(salt);
             const contract = new ethers.Contract(HasherAddress, HasherAbi, provider);
             const hash = await contract.hash(move, salt);
             setHashResult(hash);
