@@ -1,6 +1,6 @@
 # RPSLS Game
 
-You can play the game here : https://call-hasher2.vercel.app/
+You can play the game here : https://call-hasher2.vercel.app/  
 The Smart-Contract GitHub is here : https://github.com/Ewuly/Hasher-RPS
 
 ## Functions
