@@ -3,6 +3,20 @@
 You can play the game here : https://call-hasher2.vercel.app/  
 The Smart-Contract GitHub is here : https://github.com/Ewuly/Hasher-RPS
 
+## How to play
+### Player 1
+- Click on Create a new game  
+- Generate a new salt  
+- Select your move and enter the address of your oponent
+- Click on test to generate a hash
+- Enter the ammount of token you want to send and click on 1st Move
+### Player 2
+- Click on Join Game
+- Select your move and the game id
+- Click on play
+### Player 1
+- Click on solve to find out who win
+
 ## Functions
 ### Init Game
 This function is called by the player one to initialize the game, he will have connect his wallet and enter his move before to get a hash. This function will allow him to put as many eth as he wants in the game. This function will create a new instance of the game to allow multiple games to be played simultaneoustly.
